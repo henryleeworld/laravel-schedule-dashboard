@@ -1,4 +1,4 @@
-# Laravel 7 任務排程儀表板
+# Laravel 8 任務排程儀表板
 
 引入 studio 的 laravel-totem 套件來擴增儀表板管理任務排程，根據個人的喜好安排 Laravel 指令列指令，可以快速啟用/關閉任務排程，而無需再次返回代碼。
 
@@ -30,5 +30,5 @@ $ php artisan migrate
 ----
 
 ## 畫面截圖
-![](https://i.imgur.com/vy2C2hl.png)
+![](https://i.imgur.com/YUH2JJH.png)
 > 預設情況下，任務排程儀表板只能在本地環境中使用
