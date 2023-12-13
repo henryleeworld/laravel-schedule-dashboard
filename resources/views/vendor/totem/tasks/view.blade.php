@@ -55,7 +55,7 @@
         </li>
         <li>
             <span class="uk-text-muted uk-float-right">Average Run Time</span>
-            <span class="uk-float-left">{{$task->results->count() > 0 ? number_format(  $task->results->sum('duration') / (1000 * $task->results->count()) , 2) : '0'}} seconds</span>
+            <span class="uk-float-left">{{$task->results()->count() > 0 ? number_format(  $task->results()->sum('duration') / (1000 * $task->results()->count()) , 2) : '0'}} seconds</span>
         </li>
         <li>
             <span class="uk-text-muted uk-float-right">Next Run Schedule</span>
@@ -76,6 +76,11 @@
                 <span class="uk-float-left">Runs on a single server</span>
             </li>
         @endif
+        @if($task->run_in_background)
+            <li>
+                <span class="uk-float-left">Runs in the background</span>
+            </li>
+        @endif
     </ul>
 @stop
 @section('main-panel-footer')
@@ -87,6 +92,7 @@
                 {{ method_field('delete') }}
                 <button type="submit" class="uk-button uk-button-danger uk-button-small">Delete</button>
             </form>
+            <a href="{{ route('totem.tasks.all') }}" class="uk-button uk-button-secondary uk-button-small">Cancel</a>
         </span>
         <execute-button :data-task="{{ $task }}" url="{{route('totem.task.execute', $task)}}" button-class="uk-button-small uk-button-primary"></execute-button>
     </div>

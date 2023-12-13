@@ -190,6 +190,7 @@
                 <li class="uk-text-meta">Decide whether multiple instances of same task should overlap each other or not.</li>
                 <li class="uk-text-meta">Decide whether the task should be executed while the app is in maintenance mode.</li>
                 <li class="uk-text-meta">Decide whether the task should be executed on a single server.</li>
+                <li class="uk-text-meta">Decide whether the task should be executed in the background.</li>
             </ul>
         </div>
         <div class="uk-width-1-1@s uk-width-2-3@m uk-form-controls-text">
@@ -213,6 +214,13 @@
                     Run on a single server
                 </label>
             </div>
+            <div class="uk-margin">
+                <label class="uk-margin">
+                    <input type="hidden" name="run_in_background" id="run_in_background" value="0" {{old('run_in_background', $task->run_in_background) ? '' : 'checked'}}>
+                    <input type="checkbox" name="run_in_background" id="run_in_background" value="1" {{old('run_in_background', $task->run_in_background) ? 'checked' : ''}}>
+                    Run in the background
+                </label>
+            </div>
         </div>
     </div>
     <hr class="uk-divider-icon">
@@ -230,10 +238,10 @@
                 <input class="uk-input" type="number" name="auto_cleanup_num" id="auto_cleanup_num" value="{{ old('auto_cleanup_num', $task->auto_cleanup_num) ?? 0 }}" />
                 <br>
                 <label>
-                    <input type="radio" name="auto_cleanup_type" value="days" {{old('auto_cleanup_type', $task->auto_cleanup_type) !== 'results' ? '' : 'checked'}}> Days
+                    <input type="radio" name="auto_cleanup_type" value="days" {{old('auto_cleanup_type', $task->auto_cleanup_type) !== 'results' ? 'checked' : ''}}> Days
                 </label><br>
                 <label>
-                    <input type="radio" name="auto_cleanup_type" value="results" {{old('auto_cleanup_type', $task->auto_cleanup_type) === 'results' ? '' : 'checked'}}> Results
+                    <input type="radio" name="auto_cleanup_type" value="results" {{old('auto_cleanup_type', $task->auto_cleanup_type) === 'results' ? 'checked' : ''}}> Results
                 </label>
             </label>
         </div>
@@ -241,6 +249,11 @@
 @stop
 @section('main-panel-footer')
     <button class="uk-button uk-button-primary uk-button-small" type="submit">Save</button>
+    @if($task->exists)
+        <a href="{{ route('totem.task.view', $task) }}" class="uk-button uk-button-secondary uk-button-small">Cancel</a>
+    @else
+        <a href="{{ route('totem.tasks.all') }}" class="uk-button uk-button-secondary uk-button-small">Cancel</a>
+    @endif
 @stop
 @section('main-panel-after')
     </form>
