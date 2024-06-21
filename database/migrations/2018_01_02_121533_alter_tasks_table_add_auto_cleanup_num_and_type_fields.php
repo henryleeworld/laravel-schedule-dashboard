@@ -4,14 +4,12 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Studio\Totem\Database\TotemMigration;
 
-class AlterTasksTableAddAutoCleanupNumAndTypeFields extends TotemMigration
+return new class extends TotemMigration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::connection(TOTEM_DATABASE_CONNECTION)
             ->table(TOTEM_TABLE_PREFIX.'tasks', function (Blueprint $table) {
@@ -22,10 +20,8 @@ class AlterTasksTableAddAutoCleanupNumAndTypeFields extends TotemMigration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::connection(TOTEM_DATABASE_CONNECTION)
             ->table(TOTEM_TABLE_PREFIX.'tasks', function (Blueprint $table) {
@@ -37,4 +33,4 @@ class AlterTasksTableAddAutoCleanupNumAndTypeFields extends TotemMigration
                 $table->dropColumn('auto_cleanup_type');
             });
     }
-}
+};

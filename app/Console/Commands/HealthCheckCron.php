@@ -19,26 +19,14 @@ class HealthCheckCron extends Command
      *
      * @var string
      */
-    protected $description = '健康檢查排程';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $description = 'Health Check';
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
-        Log::info("健康檢查排程工作正常！");
-        $this->info('健康檢查排程工作正常！');
+        Log::info(__('The health check schedule is working fine!'));
+        $this->info(__('The health check schedule is working fine!'));
     }
 }

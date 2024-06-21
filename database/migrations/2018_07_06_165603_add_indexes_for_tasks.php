@@ -4,14 +4,12 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Studio\Totem\Database\TotemMigration;
 
-class AddIndexesForTasks extends TotemMigration
+return new class extends TotemMigration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::connection(TOTEM_DATABASE_CONNECTION)
             ->table(TOTEM_TABLE_PREFIX.'task_results', function (Blueprint $table) {
@@ -43,10 +41,8 @@ class AddIndexesForTasks extends TotemMigration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::connection(TOTEM_DATABASE_CONNECTION)
             ->table(TOTEM_TABLE_PREFIX.'task_results', function (Blueprint $table) {
@@ -78,4 +74,4 @@ class AddIndexesForTasks extends TotemMigration
                 $table->dropIndex('tasks_auto_cleanup_type_idx');
             });
     }
-}
+};

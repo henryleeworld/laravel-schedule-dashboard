@@ -1,12 +1,12 @@
 <uikit-modal :show="showModal" @close="closeModal">
     <div class="uk-modal-header">
-        <h3>Add Frequency</h3>
+        <h3>{{ __('Add Frequency') }}</h3>
     </div>
     <div class="uk-modal-body">
         <fieldset class="uk-fieldset">
             <div class="uk-margin">
                 <select id="frequency" class="uk-select" v-model="selected">
-                    <option :value="placeholder" disabled>Select a type of frequency</option>
+                    <option :value="placeholder" disabled>{{ __('Select a type of frequency') }}</option>
                     @foreach (collect($frequencies) as $key => $frequency)
                         <option :value="{{ json_encode($frequency) }}">{{$frequency['label']}}</option>
                     @endforeach
@@ -21,7 +21,7 @@
     </div>
     <div class="uk-modal-footer">
         <div class="uk-flex uk-flex-right">
-            <button class="uk-button uk-button-small uk-button-primary" @click.self.prevent="addFrequency">Add</button>
+            <button class="uk-button uk-button-small uk-button-primary" @click.self.prevent="addFrequency">{{ __('Add') }}</button>
         </div>
     </div>
 </uikit-modal>

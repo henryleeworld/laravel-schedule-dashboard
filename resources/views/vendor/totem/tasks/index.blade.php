@@ -1,31 +1,36 @@
 @extends("totem::layout")
 @section('page-title')
     @parent
-    - Tasks
+    - {{ __('Tasks') }}
 @stop
 @section('title')
     <div class="uk-flex uk-flex-between uk-flex-middle">
-        <h4 class="uk-card-title uk-margin-remove">Tasks</h4>
-        {!! Form::open([
-            'id' => 'totem__search__form',
-            'url' => Request::fullUrl(),
-            'method' => 'GET',
-            'class' => 'uk-display-inline uk-search uk-search-default'
-        ]) !!}
-        <span uk-search-icon></span>
-        {!! Form::text('q', request('q'), ['class' => 'uk-search-input', 'placeholder' => 'Search...']) !!}
-        {!! Form::close() !!}
+        <h4 class="uk-card-title uk-margin-remove">{{ __('Tasks') }}</h4>
+        <form
+            accept-charset="UTF-8"
+            method="GET"
+            action="{{ request()->fullUrl() }}"
+            id="totem__search__form"
+            class="uk-display-inline uk-search uk-search-default">
+            <span uk-search-icon></span>
+            <input
+                value="{{ request('q') }}"
+                placeholder="{{ __('Search...') }}"
+                name="q"
+                type="text"
+                class="uk-search-input">
+        </form>
     </div>
 @stop
 @section('main-panel-content')
     <table class="uk-table uk-table-responsive" cellpadding="0" cellspacing="0" class="mb1">
         <thead>
             <tr>
-                <th>{!! Html::columnSort('Description', 'description') !!}</th>
-                <th>{!! Html::columnSort('Average Runtime', 'average_runtime') !!}</th>
-                <th>{!! Html::columnSort('Last Run', 'last_ran_at') !!}</th>
-                <th>Next Run</th>
-                <th class="uk-text-center">Execute</th>
+                <th>{!! \Studio\Totem\Helpers\columnSort(__('Description'), 'description') !!}</th>
+                <th>{!! \Studio\Totem\Helpers\columnSort(__('Average Runtime'), 'average_runtime') !!}</th>
+                <th>{!! \Studio\Totem\Helpers\columnSort(__('Last Run'), 'last_ran_at') !!}</th>
+                <th>{{ __('Next Run') }}</th>
+                <th class="uk-text-center">{{ __('Execute') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -39,7 +44,7 @@
                 <tr>
                     <td class="uk-text-center" colspan="5">
                         <img class="uk-svg" width="50" height="50" src="{{asset('/vendor/totem/img/funnel.svg')}}">
-                        <p>No Tasks Found.</p>
+                        <p>{{ __('No Tasks Found.') }}</p>
                     </td>
                 </tr>
             @endforelse
@@ -50,13 +55,13 @@
     <div class="uk-flex uk-flex-between">
         <span>
             <a class="uk-icon-button uk-button-primary uk-hidden@m" uk-icon="icon: plus" href="{{route('totem.task.create')}}"></a>
-            <a class="uk-button uk-button-primary uk-button-small uk-visible@m" href="{{route('totem.task.create')}}">New Task</a>
+            <a class="uk-button uk-button-primary uk-button-small uk-visible@m" href="{{route('totem.task.create')}}">{{ __('New Task') }}</a>
         </span>
 
         <span>
             <import-button url="{{route('totem.tasks.import')}}"></import-button>
             <a class="uk-icon-button uk-button-primary uk-hidden@m" uk-icon="icon: cloud-download"  href="{{route('totem.tasks.export')}}"></a>
-            <a class="uk-button uk-button-primary uk-button-small uk-visible@m" href="{{route('totem.tasks.export')}}">Export</a>
+            <a class="uk-button uk-button-primary uk-button-small uk-visible@m" href="{{route('totem.tasks.export')}}">{{ __('Export') }}</a>
         </span>
     </div>
     {{$tasks->links('totem::partials.pagination', ['params' => '&' . http_build_query(array_filter(request()->except('page')))])}}

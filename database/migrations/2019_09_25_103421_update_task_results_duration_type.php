@@ -5,24 +5,20 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Studio\Totem\Database\TotemMigration;
 
-class UpdateTaskResultsDurationType extends TotemMigration
+return new class extends TotemMigration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         $this->migrateDurationValues();
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         $this->migrateDurationValues(false);
     }
@@ -55,7 +51,7 @@ class UpdateTaskResultsDurationType extends TotemMigration
             ->chunkById(100, function ($rows) use ($toFloat) {
                 foreach ($rows as $row) {
                     DB::connection(TOTEM_DATABASE_CONNECTION)
-                        ->table(TOTEM_TABLE_PREFIX)
+                        ->table(TOTEM_TABLE_PREFIX.'task_results')
                         ->where('id', $row->id)
                         ->update([
                             'duration' => $toFloat ? floatval($row->duration_old) : (string) $row->duration_old,
@@ -69,4 +65,4 @@ class UpdateTaskResultsDurationType extends TotemMigration
                 $table->dropColumn('duration_old');
             });
     }
-}
+};

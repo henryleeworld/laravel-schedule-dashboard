@@ -1,4 +1,4 @@
-# Laravel 10 任務排程儀表板
+# Laravel 11 任務排程儀表板
 
 引入 studio 的 laravel-totem 套件來擴增儀表板管理任務排程，根據個人的喜好安排 Laravel 指令列指令，可以快速啟用/關閉任務排程，而無需再次返回代碼。
 
@@ -20,9 +20,9 @@ $ php artisan key:generate
 ```sh
 $ php artisan migrate
 ```
-- 在進行任何此項工作之前，請確保任務排程運行如下：
+- 啟動排程器，僅需要在伺服器上增加一條 Cron 項目即可。
 ```sh
-* * * * * php /專案路徑/artisan schedule:run >> /dev/null 2>&1
+* * * * * cd /{專案路徑} && php artisan schedule:run >> /dev/null 2>&1
 ```
 - 在瀏覽器中輸入已定義的路由 URL 來訪問，例如：http://127.0.0.1:8000。
 - 你可以經由 `/totem` 來進行瀏覽任務排程儀表板。
@@ -30,5 +30,5 @@ $ php artisan migrate
 ----
 
 ## 畫面截圖
-![](https://i.imgur.com/KmYK5KM.png)
+![](https://i.imgur.com/8bkT9Gm.png)
 > 預設情況下，任務排程儀表板只能在本地環境中使用

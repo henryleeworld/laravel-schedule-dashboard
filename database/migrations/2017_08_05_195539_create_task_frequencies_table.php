@@ -4,19 +4,17 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Studio\Totem\Database\TotemMigration;
 
-class CreateTaskFrequenciesTable extends TotemMigration
+return new class extends TotemMigration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::connection(TOTEM_DATABASE_CONNECTION)
             ->create(TOTEM_TABLE_PREFIX.'task_frequencies', function (Blueprint $table) {
-                $table->increments('id');
-                $table->unsignedInteger('task_id');
+                $table->id();
+                $table->foreignId('task_id');
                 $table->string('label');
                 $table->string('interval');
                 $table->timestamps();
@@ -25,12 +23,10 @@ class CreateTaskFrequenciesTable extends TotemMigration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::connection(TOTEM_DATABASE_CONNECTION)
             ->dropIfExists(TOTEM_TABLE_PREFIX.'task_frequencies');
     }
-}
+};

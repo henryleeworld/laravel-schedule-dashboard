@@ -4,18 +4,16 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Studio\Totem\Database\TotemMigration;
 
-class CreateTasksTable extends TotemMigration
+return new class extends TotemMigration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::connection(TOTEM_DATABASE_CONNECTION)
             ->create(TOTEM_TABLE_PREFIX.'tasks', function (Blueprint $table) {
-                $table->increments('id');
+                $table->id();
                 $table->string('description');
                 $table->string('command');
                 $table->string('parameters')->nullable();
@@ -31,12 +29,10 @@ class CreateTasksTable extends TotemMigration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::connection(TOTEM_DATABASE_CONNECTION)
             ->dropIfExists(TOTEM_TABLE_PREFIX.'tasks');
     }
-}
+};
