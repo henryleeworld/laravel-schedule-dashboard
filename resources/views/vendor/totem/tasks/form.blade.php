@@ -60,91 +60,14 @@
             </select>
         </div>
     </div>
-    <task-type inline-template current="{{old('type', $task->expression ? 'expression' : 'frequency')}}" :existing="{{old('frequencies') ? json_encode(old('frequencies')) : $task->frequencies}}" >
-        <div class="uk-margin">
-            <div class="uk-grid">
-                <div class="uk-width-1-1@s uk-width-1-3@m">
-                    <div class="uk-form-label">{{ __('Type') }}</div>
-                    <div class="uk-text-meta">{{ __('Choose whether to define a cron expression or to add frequencies') }}</div>
-                </div>
-                <div class="uk-width-1-1@s uk-width-2-3@m uk-form-controls-text">
-                    <label>
-                        <input type="radio" name="type" v-model="type" value="expression"> {{ __('Expression') }}
-                    </label><br>
-                    <label>
-                        <input type="radio" name="type" v-model="type" value="frequency"> {{ __('Frequencies') }}
-                    </label>
-                </div>
-            </div>
-            <div class="uk-grid" v-if="isCron">
-                <div class="uk-width-1-1@s uk-width-1-3@m">
-                    <label class="uk-form-label">{{ __('Cron Expression') }}</label>
-                    <div class="uk-text-meta">{{ __('Add a cron expression for your task') }}</div>
-                </div>
-                <div class="uk-width-1-1@s uk-width-2-3@m">
-                    <input class="uk-input" placeholder="{{ __('e.g * * * * * to run this task all the time') }}" name="expression" id="expression" value="{{old('expression', $task->expression)}}" type="text">
-                    @if($errors->has('expression'))
-                        <p class="uk-text-danger">{{$errors->first('expression')}}</p>
-                    @endif
-                </div>
-            </div>
-            <div class="uk-grid" v-if="managesFrequencies">
-                <div class="uk-width-1-1@s uk-width-1-3@m">
-                    <label class="uk-form-label">{{ __('Frequencies') }}</label>
-                    <div class="uk-text-meta">{{ __('Add frequencies to your task. These frequencies will be converted into a cron expression while scheduling the task') }}</div>
-                </div>
-                <div class="uk-width-1-1@s uk-width-2-3@m">
-                    <a class="uk-button uk-button-small uk-button-link" @click.self.prevent="showModal = true">{{ __('Add Frequency') }}</a>
-                    @include('totem::dialogs.frequencies.add')
-                    <table class="uk-table uk-table-divider uk-margin-remove">
-                        <thead>
-                            <tr>
-                                <th class="uk-padding-remove-left">
-                                    {{ __('Frequency') }}
-                                </th>
-                                <th class="uk-padding-remove-left">
-                                    {{ __('Parameters') }}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(frequency, index) in frequencies">
-                                <td class="uk-padding-remove-left">
-                                    @{{ frequency.label }}
-                                    <input type="hidden" :name="'frequencies[' + index + '][interval]'" v-model="frequency.interval">
-                                    <input type="hidden" :name="'frequencies[' + index + '][label]'" v-model="frequency.label">
-                                </td>
-                                <td class="uk-padding-remove-left">
-                                    <span v-if="frequency.parameters && frequency.parameters.length > 0">
-                                        <span v-for="(parameter, key) in frequency.parameters">
-                                            @{{ parameter.value }}
-                                            <span v-if="frequency.parameters.length > 1 && key < frequency.parameters.length - 1">,</span>
-                                            <input type="hidden" :name="'frequencies[' + index + '][parameters][' + key +'][name]'" v-model="parameter.name">
-                                            <input type="hidden" :name="'frequencies[' + index + '][parameters][' + key +'][value]'" v-model="parameter.value">
-                                        </span>
-                                    </span>
-                                    <span v-else>
-                                        {{ __('No Parameters') }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <a class="uk-button uk-button-link" @click="remove(index)">
-                                        <span uk-icon="icon: close"></span>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr v-if="frequencies.length == 0">
-                                <td colspan="3" class="uk-padding-remove-left">{{ __('No Frequencies Found') }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    @if($errors->has('frequencies'))
-                        <p class="uk-text-danger">{{$errors->first('frequencies')}}</p>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </task-type>
+    <task-type
+        current="{{ old('type', $task->expression ? 'expression' : 'frequency') }}"
+        :existing="{{ old('frequencies') ? json_encode(old('frequencies')) : $task->frequencies }}"
+        expression-value="{{ old('expression', $task->expression) }}"
+        expression-error="{{ $errors->first('expression') }}"
+        frequencies-error="{{ $errors->first('frequencies') }}"
+        :frequencies-config="{{ json_encode($frequencies) }}"
+    ></task-type>
     <hr class="uk-divider-icon">
     <div class="uk-grid">
         <div class="uk-width-1-1@s uk-width-1-3@m">
@@ -152,7 +75,7 @@
             <div class="uk-text-meta">{{ __('Add an email address to receive notifications when this task gets executed. Leave empty if you do not wish to receive email notifications') }}</div>
         </div>
         <div class="uk-width-1-1@s uk-width-2-3@m">
-            <input type="text" id="email" name="notification_email_address" value="{{old('notification_email_address', $task->notification_email_address)}}" class="uk-input" placeholder="{{ __('e.g.') }} john.doe@name.tld">
+            <input type="text" id="email" name="notification_email_address" value="{{old('notification_email_address', $task->notification_email_address)}}" class="uk-input" placeholder="e.g. john.doe@name.tld">
             @if($errors->has('notification_email_address'))
                 <p class="uk-text-danger">{{$errors->first('notification_email_address')}}</p>
             @endif
@@ -164,7 +87,7 @@
             <div class="uk-text-meta">{{ __('Add a phone number to receive SMS notifications. Leave empty if you do not wish to receive sms notifications') }}</div>
         </div>
         <div class="uk-width-1-1@s uk-width-2-3@m">
-            <input type="text" id="phone" name="notification_phone_number" value="{{old('notification_phone_number', $task->notification_phone_number)}}" class="uk-input" placeholder="{{ __('e.g.') }} 18701234567">
+            <input type="text" id="phone" name="notification_phone_number" value="{{old('notification_phone_number', $task->notification_phone_number)}}" class="uk-input" placeholder="e.g. 18701234567">
             @if($errors->has('notification_phone_number'))
                 <p class="uk-text-danger">{{$errors->first('notification_phone_number')}}</p>
             @endif
@@ -176,7 +99,7 @@
             <div class="uk-text-meta">{{ __('Add a slack web hook url to recieve slack notifications. Leave empty if you do not wish to receive slack notifications') }}</div>
         </div>
         <div class="uk-width-1-1@s uk-width-2-3@m">
-            <input type="text" id="slack" name="notification_slack_webhook" value="{{old('notification_slack_webhook', $task->notification_slack_webhook)}}" class="uk-input" placeholder="{{ __('e.g.') }} https://hooks.slack.com/TXXXXX/BXXXXX/XXXXXXXXXX">
+            <input type="text" id="slack" name="notification_slack_webhook" value="{{old('notification_slack_webhook', $task->notification_slack_webhook)}}" class="uk-input" placeholder="e.g. https://hooks.slack.com/TXXXXX/BXXXXX/XXXXXXXXXX">
             @if($errors->has('notification_slack_webhook'))
                 <p class="uk-text-danger">{{$errors->first('notification_slack_webhook')}}</p>
             @endif
@@ -250,7 +173,7 @@
 @section('main-panel-footer')
     <button class="uk-button uk-button-primary uk-button-small" type="submit">{{ __('Save') }}</button>
     @if($task->exists)
-        <a href="{{ route('totem.task.view', $task) }}" class="uk-button uk-button-secondary uk-button-small">{{ __('Cancel') }}</a>
+        <a href="{{ route('totem.task.view', ['totemTask' => $task]) }}" class="uk-button uk-button-secondary uk-button-small">{{ __('Cancel') }}</a>
     @else
         <a href="{{ route('totem.tasks.all') }}" class="uk-button uk-button-secondary uk-button-small">{{ __('Cancel') }}</a>
     @endif

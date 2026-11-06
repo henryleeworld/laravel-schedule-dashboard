@@ -5,14 +5,14 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class HealthCheckCron extends Command
+class HealthCheck extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'health-check:cron';
+    protected $signature = 'health:check';
 
     /**
      * The console command description.

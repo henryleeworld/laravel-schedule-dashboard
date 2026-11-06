@@ -6,7 +6,7 @@
 @section('title')
     <div class="uk-flex uk-flex-between uk-flex-middle">
         <h5 class="uk-card-title uk-margin-remove">{{ __('Task Details') }}</h5>
-        <status-button :data-task="{{ $task }}" :data-exists="{{ $task->exists ? 'true' : 'false' }}" activate-url="{{route('totem.task.activate')}}" deactivate-url="{{route('totem.task.deactivate', $task)}}"></status-button>
+        <status-button :data-task="{{ $task }}" :data-exists="{{ $task->exists ? 'true' : 'false' }}" activate-url="{{route('totem.task.activate')}}" deactivate-url="{{route('totem.task.deactivate', ['totemTask' => $task])}}"></status-button>
     </div>
 @stop
 @section('main-panel-content')
@@ -21,7 +21,7 @@
         </li>
         <li>
             <span class="uk-text-muted uk-float-right">{{ __('Parameters') }}</span>
-            <span class="uk-float-left">{{$task->parameters ?? "N/A"}}</span>
+            <span class="uk-float-left">{{$task->parameters ?? __('N/A')}}</span>
         </li>
         <li>
             <span class="uk-text-muted uk-float-right">{{ __('Cron Expression') }}</span>
@@ -43,19 +43,19 @@
         </li>
         <li>
             <span class="uk-text-muted uk-float-right">{{ __('Email Notification') }}</span>
-            <span class="uk-float-left">{{$task->notification_email_address ?? 'N/A'}}</span>
+            <span class="uk-float-left">{{$task->notification_email_address ?? __('N/A')}}</span>
         </li>
         <li>
             <span class="uk-text-muted uk-float-right">{{ __('SMS Notification') }}</span>
-            <span class="uk-float-left">{{$task->notification_phone_number ?? 'N/A'}}</span>
+            <span class="uk-float-left">{{$task->notification_phone_number ?? __('N/A')}}</span>
         </li>
         <li>
             <span class="uk-text-muted uk-float-right">{{ __('Slack Notification') }}</span>
-            <span class="uk-float-left">{{$task->notification_slack_webhook ?? 'N/A'}}</span>
+            <span class="uk-float-left">{{$task->notification_slack_webhook ?? __('N/A')}}</span>
         </li>
         <li>
             <span class="uk-text-muted uk-float-right">{{ __('Average Run Time') }}</span>
-            <span class="uk-float-left">{{$task->results()->count() > 0 ? number_format(  $task->results()->sum('duration') / (1000 * $task->results()->count()) , 2) : '0'}} {{ __('seconds') }}</span>
+            <span class="uk-float-left">{{$task->results()->count() > 0 ? number_format(  $task->results()->sum('duration') / (1000 * $task->results()->count()) , 2) : '0' . ' ' . __('seconds') }}</span>
         </li>
         <li>
             <span class="uk-text-muted uk-float-right">{{ __('Next Run Schedule') }}</span>
@@ -86,15 +86,15 @@
 @section('main-panel-footer')
     <div class="uk-flex uk-flex-between uk-flex-middle">
         <span>
-            <a href="{{ route('totem.task.edit', $task) }}" class="uk-button uk-button-primary uk-button-small">{{ __('Edit') }}</a>
-            <form class="uk-display-inline" action="{{route('totem.task.delete', $task)}}" method="post">
+            <a href="{{ route('totem.task.edit', ['totemTask' => $task]) }}" class="uk-button uk-button-primary uk-button-small">{{ __('Edit') }}</a>
+            <form class="uk-display-inline" action="{{route('totem.task.delete', ['totemTask' => $task])}}" method="post" onsubmit="return confirm('{{ __('Are you sure you want to delete this task?') }}')">
                 {{ csrf_field() }}
                 {{ method_field('delete') }}
                 <button type="submit" class="uk-button uk-button-danger uk-button-small">{{ __('Delete') }}</button>
             </form>
             <a href="{{ route('totem.tasks.all') }}" class="uk-button uk-button-secondary uk-button-small">{{ __('Cancel') }}</a>
         </span>
-        <execute-button :data-task="{{ $task }}" url="{{route('totem.task.execute', $task)}}" button-class="uk-button-small uk-button-primary"></execute-button>
+        <execute-button :data-task="{{ $task }}" url="{{route('totem.task.execute', ['totemTask' => $task])}}" button-class="uk-button-small uk-button-primary"></execute-button>
     </div>
 @stop
 @section('additional-panels')
@@ -115,9 +115,9 @@
                 @forelse($results = $task->results()->orderByDesc('created_at')->paginate(10) as $result)
                     <tr>
                         <td>{{$result->ran_at->toDateTimeString()}}</td>
-                        <td>{{ number_format($result->duration / 1000 , 2)}} {{ __('seconds') }}</td>
+                        <td>{{ number_format($result->duration / 1000 , 2) . ' ' . __('seconds') }}</td>
                         <td>
-                            <task-output output="{{nl2br($result->result)}}"></task-output>
+                            <task-output :output="{{ \Illuminate\Support\Js::from($result->result) }}"></task-output>
                         </td>
                     </tr>
                 @empty

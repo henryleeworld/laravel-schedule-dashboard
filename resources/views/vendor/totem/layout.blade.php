@@ -9,10 +9,11 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>
-		    {{ __('Totem') }}
+            {{ __('Totem') }}
             @yield('page-title')
         </title>
         <link rel="stylesheet" type="text/css" href="{{ asset('/vendor/totem/css/app.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('/vendor/totem/css/components.css') }}">
         @stack('style')
     </head>
     <body>
